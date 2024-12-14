@@ -1,0 +1,46 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+}
+
+dependencies {
+    compileOnly "com.android.tools.build:gradle:8.7.3"
+    compileOnly "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.20"
+    compileOnly project(':muddy-runtime')
+    implementation "org.ow2.asm:asm-tree:9.7.1"
+    implementation gradleApi()
+    implementation localGroovy()
+}
+
+gradlePlugin {
+    plugins {
+        MuddyPlugin {
+            id = 'muddy-plugin'
+            implementationClass = 'com.panda912.muddy.plugin.MuddyPlugin'
+        }
+    }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'com.cris.plugin'
+            artifactId = 'muddy'
+            version = '1.0.0'
+        }
+    }
+    repositories {
+        mavenLocal()  // Publish to local Maven repository
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+kotlin {
+    jvmToolchain(17)
+}
